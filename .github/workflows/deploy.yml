@@ -5,7 +5,6 @@ on:
     branches: [ "devops-config-ci-cd" ]
 
 jobs:
-  # T-23: Compilación
   build-backend:
     runs-on: ubuntu-latest
     steps:
@@ -31,7 +30,6 @@ jobs:
           npm install
           npm run build
 
-  # T-24: Ejecución de Pruebas (Nuevo)
   test-backend:
     needs: build-backend
     runs-on: ubuntu-latest
@@ -42,8 +40,8 @@ jobs:
         with:
           dotnet-version: '9.0'
       - name: Ejecutar Pruebas xUnit
-        # Esto buscará y ejecutará todos los tests (como los del Gatekeeper)
-        run: dotnet test --no-build --verbosity normal
+        # Quitamos --no-build para que el test compile lo necesario en este runner
+        run: dotnet test --verbosity normal
 
   test-frontend:
     needs: build-frontend
@@ -57,4 +55,5 @@ jobs:
       - name: Ejecutar Pruebas Angular
         run: |
           cd Cms-obstreticia
-          npm test -- --watch=false --browsers=ChromeHeadless
+          # Usamos una configuración de CI estándar para Angular
+          npm test -- --watch=false --browsers=ChromeHeadless --no-progress
