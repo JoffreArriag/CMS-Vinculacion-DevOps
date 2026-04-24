@@ -1,0 +1,86 @@
+.card {
+  display: block;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #1a2d4a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0, 196, 255, 0.3);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+  }
+
+  
+  .card-img {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 196, 255, 0.08);
+
+    span {
+      font-size: 2rem;
+      transition: transform 0.2s ease;
+    }
+  }
+
+  &:hover .card-img span {
+    transform: scale(1.05);
+  }
+
+
+  .card-body {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .card-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.4;
+    transition: color 0.2s;
+  }
+
+  &:hover .card-title {
+    color: #00c4ff;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.5);
+
+    .dot {
+      width: 3px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+    }
+  }
+
+  
+  &.prenatal .card-img {
+    background: rgba(0, 196, 255, 0.12);
+  }
+
+  &.nutricion .card-img {
+    background: rgba(72, 187, 120, 0.12);
+  }
+
+  &.riesgos .card-img {
+    background: rgba(239, 68, 68, 0.12);
+  }
+
+  &.postparto .card-img {
+    background: rgba(236, 72, 153, 0.12);
+  }
+}
