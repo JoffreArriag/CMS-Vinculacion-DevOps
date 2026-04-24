@@ -1,27 +1,4 @@
-name: CMS Vinculacion CI/CD
-
-on:
-  push:
-    branches: [ "devops-config-ci-cd" ]
-
-jobs:
-  # T-23: Compilación del Backend
-  build-backend:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout del código
-        uses: actions/checkout@v4
-
-      - name: Configurar .NET 9
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '9.0'
-
-      - name: Compilar Backend
-        run: dotnet build CMSVinculacion.Api --configuration Release
-
-  # T-23: Compilación del Frontend (Angular)
-  build-frontend:
+build-frontend:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout del código
@@ -34,6 +11,9 @@ jobs:
 
       - name: Instalar y Compilar Frontend
         run: |
-          cd Cms-obstreticia
+          # Buscamos dónde está el package.json de Angular
+          FRONT_DIR=$(find . -name "package.json" -not -path "*/node_modules/*" -exec dirname {} \;)
+          echo "Carpeta de Frontend encontrada en: $FRONT_DIR"
+          cd "$FRONT_DIR"
           npm install
           npm run build
