@@ -2,7 +2,7 @@ name: CMS Vinculacion CI/CD
 
 on:
   push:
-    branches: [ "main", "feature/equipo4-backend", "devops-config-ci-cd" ]
+    branches: [ "devops-config-ci-cd" ]
 
 jobs:
   build-backend:
@@ -11,18 +11,12 @@ jobs:
       - name: Checkout del código
         uses: actions/checkout@v4
 
-      - name: Listar todos los archivos
-        # Este comando nos dirá EXACTAMENTE dónde está el condenado archivo .sln
-        run: find . -maxdepth 3 -name "*.sln"
-
       - name: Configurar .NET 9
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0'
 
-      - name: Restaurar y Compilar (Detección Automática)
-        run: |
-          SLN_PATH=$(find . -name "*.sln" | head -n 1)
-          echo "Archivo encontrado en: $SLN_PATH"
-          dotnet restore "$SLN_PATH"
-          dotnet build "$SLN_PATH" --configuration Release --no-restore
+      - name: Compilar Backend
+        # Apuntamos directamente a la CARPETA, no al archivo .sln
+        # GitHub buscará el archivo .csproj dentro de esa carpeta automáticamente
+        run: dotnet build CMSVinculacion.Api --configuration Release
