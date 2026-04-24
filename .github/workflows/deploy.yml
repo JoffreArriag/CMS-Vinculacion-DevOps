@@ -2,28 +2,27 @@ name: CMS Vinculacion CI/CD
 
 on:
   push:
-    # Se activa cuando subes código a estas ramas
     branches: [ "main", "feature/equipo4-backend", "devops-config-ci-cd" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
-  # T-23: Stage Build para .NET (Backend)
   build-backend:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout del código
         uses: actions/checkout@v4
 
+      - name: Listar todos los archivos
+        # Este comando nos dirá EXACTAMENTE dónde está el condenado archivo .sln
+        run: find . -maxdepth 3 -name "*.sln"
+
       - name: Configurar .NET 9
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0'
 
-      - name: Restaurar dependencias
-        # Entra a la carpeta CMSVinculacion.Api para buscar el archivo de solución
-        run: dotnet restore CMSVinculacion.Api/CMSVinculacion.Api.sln
-
-      - name: Compilar Backend (Stage Build)
-        # Compila el proyecto en modo Release usando la ruta exacta
-        run: dotnet build CMSVinculacion.Api/CMSVinculacion.Api.sln --configuration Release --no-restore
+      - name: Restaurar y Compilar (Detección Automática)
+        run: |
+          SLN_PATH=$(find . -name "*.sln" | head -n 1)
+          echo "Archivo encontrado en: $SLN_PATH"
+          dotnet restore "$SLN_PATH"
+          dotnet build "$SLN_PATH" --configuration Release --no-restore
