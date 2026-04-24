@@ -5,6 +5,7 @@ on:
     branches: [ "devops-config-ci-cd" ]
 
 jobs:
+  # T-23: Compilación
   build-backend:
     runs-on: ubuntu-latest
     steps:
@@ -30,6 +31,7 @@ jobs:
           npm install
           npm run build
 
+  # T-24: Ejecución de Pruebas (Corregido)
   test-backend:
     needs: build-backend
     runs-on: ubuntu-latest
@@ -40,8 +42,8 @@ jobs:
         with:
           dotnet-version: '9.0'
       - name: Ejecutar Pruebas xUnit
-        # Quitamos --no-build para que el test compile lo necesario en este runner
-        run: dotnet test --verbosity normal
+        # Forzamos a que busque en la carpeta de pruebas
+        run: dotnet test Backend.Tests/Backend.Tests.csproj --verbosity normal
 
   test-frontend:
     needs: build-frontend
@@ -55,5 +57,6 @@ jobs:
       - name: Ejecutar Pruebas Angular
         run: |
           cd Cms-obstreticia
-          # Usamos una configuración de CI estándar para Angular
-          npm test -- --watch=false --browsers=ChromeHeadless --no-progress
+          npm install  # Aseguramos que las dependencias estén para los tests
+          # npx permite usar el comando 'ng' sin instalarlo globalmente
+          npx ng test --watch=false --browsers=ChromeHeadless --no-progress
