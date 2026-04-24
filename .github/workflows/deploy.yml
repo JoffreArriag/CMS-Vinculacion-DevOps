@@ -5,38 +5,56 @@ on:
     branches: [ "devops-config-ci-cd" ]
 
 jobs:
-  # T-23: Compilación del Backend (Este ya funciona)
+  # T-23: Compilación
   build-backend:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout del código
-        uses: actions/checkout@v4
-
-      - name: Configurar .NET 9
+      - uses: actions/checkout@v4
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0'
-
       - name: Compilar Backend
         run: dotnet build CMSVinculacion.Api --configuration Release
 
-  # T-23: Compilación del Frontend (Con búsqueda automática)
   build-frontend:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout del código
-        uses: actions/checkout@v4
-
-      - name: Configurar Node.js
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
       - name: Instalar y Compilar Frontend
         run: |
-          # Buscamos la carpeta que contiene el package.json
-          FRONT_DIR=$(find . -name "package.json" -not -path "*/node_modules/*" -exec dirname {} \;)
-          echo "Carpeta de Frontend encontrada en: $FRONT_DIR"
-          cd "$FRONT_DIR"
+          cd Cms-obstreticia
           npm install
           npm run build
+
+  # T-24: Ejecución de Pruebas (Nuevo)
+  test-backend:
+    needs: build-backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0'
+      - name: Ejecutar Pruebas xUnit
+        # Esto buscará y ejecutará todos los tests (como los del Gatekeeper)
+        run: dotnet test --no-build --verbosity normal
+
+  test-frontend:
+    needs: build-frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Ejecutar Pruebas Angular
+        run: |
+          cd Cms-obstreticia
+          npm test -- --watch=false --browsers=ChromeHeadless
