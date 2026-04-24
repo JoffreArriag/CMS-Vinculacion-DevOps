@@ -2,12 +2,12 @@ name: CMS Vinculacion CI/CD
 
 on:
   push:
-    branches: [ "main", "feature/equipo4-backend" ]
+    # Agregamos "devops-config-ci-cd" a la lista de abajo:
+    branches: [ "main", "feature/equipo4-backend", "devops-config-ci-cd" ]
   pull_request:
     branches: [ "main" ]
 
 jobs:
-  # T-23: Stage Build para .NET (Backend)
   build-backend:
     runs-on: ubuntu-latest
     steps:
@@ -17,10 +17,10 @@ jobs:
       - name: Configurar .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0' # Ajustado a tu versión de proyecto
+          dotnet-version: '9.0' 
 
       - name: Restaurar dependencias
-        run: dotnet restore
+        run: dotnet restore ./CMSVinculacion.Api/CMSVinculacion.Api.sln
 
       - name: Compilar Backend (Stage Build)
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build ./CMSVinculacion.Api/CMSVinculacion.Api.sln --configuration Release --no-restore
