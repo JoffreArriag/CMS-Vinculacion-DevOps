@@ -1,19 +1,18 @@
+## Visual Studio y .NET
 .vs/
-*.cache
-*.vsidx
-*.vsidx
-*.pdb
-*.txt
+[Bb]in/
+[Ob]j/
+*.user
+*.userosscache
+*.sln.docstates
+
+## Archivos de compilación
 *.dll
-*.editorconfig
+*.exe
 *.pdb
-*.json
-*.v2
-*.dll
-*.1
-bin/
-obj/
-*.pdb
-Debug/
-*.csproj.user
+*.suo
+
+## Configuración de usuario (pero NO el código)
 appsettings.Development.json
+
+## NO IGNORAR .json en general, solo los específicos de arriba
