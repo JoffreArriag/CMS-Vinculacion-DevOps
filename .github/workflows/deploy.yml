@@ -2,13 +2,11 @@ name: CMS Vinculacion CI/CD
 
 on:
   push:
-    # Esto hace que el "Robot" se active en estas 3 ramas
     branches: [ "main", "feature/equipo4-backend", "devops-config-ci-cd" ]
   pull_request:
     branches: [ "main" ]
 
 jobs:
-  # T-23: Stage Build para .NET (Backend)
   build-backend:
     runs-on: ubuntu-latest
     steps:
@@ -20,10 +18,12 @@ jobs:
         with:
           dotnet-version: '9.0'
 
-      - name: Restaurar dependencias
-        # Busca cualquier archivo .sln y descarga las librerías
-        run: dotnet restore $(find . -name "*.sln" | head -n 1)
+      - name: Listar archivos (Para Debug)
+        # Esto nos mostrará en el log qué carpetas hay realmente
+        run: ls -R
 
-      - name: Compilar Backend (Stage Build)
-        # Compila el proyecto en modo Release (listo para producción)
-        run: dotnet build $(find . -name "*.sln" | head -n 1) --configuration Release --no-restore
+      - name: Restaurar y Compilar
+        # Esta versión es más agresiva para encontrar el proyecto
+        run: |
+          dotnet restore **/*.sln || dotnet restore **/*.csproj
+          dotnet build **/*.sln --configuration Release || dotnet build **/*.csproj --configuration Release
