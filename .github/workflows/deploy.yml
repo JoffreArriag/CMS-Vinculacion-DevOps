@@ -5,6 +5,7 @@ on:
     branches: [ "devops-config-ci-cd" ]
 
 jobs:
+  # T-23: Compilación del Backend
   build-backend:
     runs-on: ubuntu-latest
     steps:
@@ -17,6 +18,22 @@ jobs:
           dotnet-version: '9.0'
 
       - name: Compilar Backend
-        # Apuntamos directamente a la CARPETA, no al archivo .sln
-        # GitHub buscará el archivo .csproj dentro de esa carpeta automáticamente
         run: dotnet build CMSVinculacion.Api --configuration Release
+
+  # T-23: Compilación del Frontend (Angular)
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar y Compilar Frontend
+        run: |
+          cd Cms-obstreticia
+          npm install
+          npm run build
