@@ -2,11 +2,13 @@ name: CMS Vinculacion CI/CD
 
 on:
   push:
+    # Se activa cuando subes código a estas ramas
     branches: [ "main", "feature/equipo4-backend", "devops-config-ci-cd" ]
   pull_request:
     branches: [ "main" ]
 
 jobs:
+  # T-23: Stage Build para .NET (Backend)
   build-backend:
     runs-on: ubuntu-latest
     steps:
@@ -18,12 +20,10 @@ jobs:
         with:
           dotnet-version: '9.0'
 
-      - name: Listar archivos (Para Debug)
-        # Esto nos mostrará en el log qué carpetas hay realmente
-        run: ls -R
+      - name: Restaurar dependencias
+        # Entra a la carpeta CMSVinculacion.Api para buscar el archivo de solución
+        run: dotnet restore CMSVinculacion.Api/CMSVinculacion.Api.sln
 
-      - name: Restaurar y Compilar
-        # Esta versión es más agresiva para encontrar el proyecto
-        run: |
-          dotnet restore **/*.sln || dotnet restore **/*.csproj
-          dotnet build **/*.sln --configuration Release || dotnet build **/*.csproj --configuration Release
+      - name: Compilar Backend (Stage Build)
+        # Compila el proyecto en modo Release usando la ruta exacta
+        run: dotnet build CMSVinculacion.Api/CMSVinculacion.Api.sln --configuration Release --no-restore
