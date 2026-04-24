@@ -2,7 +2,6 @@ name: CMS Vinculacion CI/CD
 
 on:
   push:
-    # Agregamos "devops-config-ci-cd" a la lista de abajo:
     branches: [ "main", "feature/equipo4-backend", "devops-config-ci-cd" ]
   pull_request:
     branches: [ "main" ]
@@ -20,7 +19,8 @@ jobs:
           dotnet-version: '9.0' 
 
       - name: Restaurar dependencias
-        run: dotnet restore ./CMSVinculacion.Api/CMSVinculacion.Api.sln
+        # El **/ ayuda a encontrar el archivo sin importar si hay carpetas extras
+        run: dotnet restore **/CMSVinculacion.Api.sln
 
       - name: Compilar Backend (Stage Build)
-        run: dotnet build ./CMSVinculacion.Api/CMSVinculacion.Api.sln --configuration Release --no-restore
+        run: dotnet build **/CMSVinculacion.Api.sln --configuration Release --no-restore
